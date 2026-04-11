@@ -8,3 +8,8 @@ Item::Item(std::string InName, ItemType InType, int InMaxStackSize, std::optiona
 		MaxStackSize = 1;
 	}
 }
+
+bool Item::operator==(const Item& Other)
+{
+	return Name == Other.Name && Type == Other.Type && MaxStackSize == Other.MaxStackSize && EquipSlot == Other.EquipSlot;
+}

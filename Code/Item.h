@@ -35,6 +35,10 @@ public:
 
     inline std::optional<EquipmentSlot> GetEquipSlot() const { return EquipSlot; }
 
+    inline static Item NoItem() { return Item("", ItemType::Consumable, 0, std::nullopt); }
+
+    bool operator==(const Item& Other);
+
 private:
 
     std::string Name;
