@@ -1,5 +1,7 @@
 #include "Item.h"
 
+Item Item::NoItem("", ItemType::Consumable, 0, std::nullopt); 
+
 Item::Item(std::string InName, ItemType InType, int InMaxStackSize, std::optional<EquipmentSlot> InEquipSlot)
 	: Name(std::move(InName)), Type(InType), MaxStackSize(InMaxStackSize), EquipSlot(InEquipSlot)
 {

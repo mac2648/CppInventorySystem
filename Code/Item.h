@@ -35,8 +35,6 @@ public:
 
     inline std::optional<EquipmentSlot> GetEquipSlot() const { return EquipSlot; }
 
-    inline static Item NoItem() { return Item("", ItemType::Consumable, 0, std::nullopt); }
-
     bool operator==(const Item& Other);
 
 private:
@@ -48,11 +46,14 @@ private:
     int MaxStackSize;
 
     std::optional<EquipmentSlot> EquipSlot;
+
+public:
+    //public static value used to identify an item as empty
+    static Item NoItem;
 };
 
 
 // This is not an implementation for an Item list, it's for testing purposes to reduce the typing required to create Items.
-
 static Item HealthPotion("Health Potion", ItemType::Consumable, 20, std::nullopt);
 static Item ManaPotion("Mana Potion", ItemType::Consumable, 20, std::nullopt);
 static Item IronSword("Iron Sword", ItemType::Equipment, 1, EquipmentSlot::Weapon);

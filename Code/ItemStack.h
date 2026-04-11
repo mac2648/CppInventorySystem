@@ -8,7 +8,7 @@ public:
 
     ItemStack(const Item& InItem, int InQuantity);
 
-    inline const Item& GetItem() const { return StackedItem; }
+    inline const Item& GetItem() const { return StackedItem.has_value() ? StackedItem.value() : Item::NoItem; }
 
     inline int GetQuantity() const { return Quantity; }
 
@@ -31,7 +31,7 @@ public:
 
 private:
 
-    Item StackedItem;
+    std::optional<Item> StackedItem;
 
     int Quantity;
 };

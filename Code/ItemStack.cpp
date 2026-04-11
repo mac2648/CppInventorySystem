@@ -5,9 +5,9 @@
 ItemStack::ItemStack(const Item& InItem, int InQuantity)
 	: StackedItem(InItem) , Quantity(InQuantity)
 {
-	if (StackedItem.GetMaxStackSize() < Quantity)
+	if (StackedItem.value().GetMaxStackSize() < Quantity)
 	{
-		Quantity = StackedItem.GetMaxStackSize();
+		Quantity = StackedItem.value().GetMaxStackSize();
 	}
 
 	if (Quantity == 0)
@@ -18,16 +18,16 @@ ItemStack::ItemStack(const Item& InItem, int InQuantity)
 
 bool ItemStack::CanAdd(int Amount) const
 {
-	return StackedItem.GetMaxStackSize() >= (Quantity + Amount);
+	return StackedItem.value().GetMaxStackSize() >= (Quantity + Amount);
 }
 
 int ItemStack::Add(int Amount)
 {
 	Quantity += Amount;
 
-	if (Quantity > StackedItem.GetMaxStackSize())
+	if (Quantity > StackedItem.value().GetMaxStackSize())
 	{
-		int Leftover = Quantity - StackedItem.GetMaxStackSize();
+		int Leftover = Quantity - StackedItem.value().GetMaxStackSize();
 		Quantity -= Leftover;
 		return Leftover;
 	}
@@ -59,7 +59,7 @@ int ItemStack::Remove(int Amount)
 	{
 		int Leftover = -Quantity;
 		Quantity = 0;
-		StackedItem = Item::NoItem();
+		StackedItem.reset();
 		return Leftover;
 	}
 	else
@@ -70,11 +70,11 @@ int ItemStack::Remove(int Amount)
 
 bool ItemStack::IsFull() const
 {
-	return Quantity == StackedItem.GetMaxStackSize();
+	return Quantity == StackedItem.value().GetMaxStackSize();
 }
 
 bool ItemStack::IsEmpty() const
 {
 	//in case Quantity is not 0 but item is NoItem the stack is still considered empty
-	return Quantity == 0 || StackedItem == Item::NoItem();
+	return Quantity == 0 || !StackedItem.has_value();
 }
