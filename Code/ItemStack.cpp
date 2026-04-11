@@ -1,35 +1,38 @@
 #include "ItemStack.h"
 
 #include <iostream>
+#include <algorithm>
+#include <cassert>
 
 ItemStack::ItemStack(const Item& InItem, int InQuantity)
-	: StackedItem(InItem) , Quantity(InQuantity)
+	: StackedItem(InItem) , Quantity(std::clamp(InQuantity, 0, InItem.GetMaxStackSize()))
 {
-	if (StackedItem.value().GetMaxStackSize() < Quantity)
-	{
-		Quantity = StackedItem.value().GetMaxStackSize();
-	}
-
-	if (Quantity == 0)
-	{
-		std::cout << "created a stack with 0 items, this stack is empty\n";
-	}
 }
 
 bool ItemStack::CanAdd(int Amount) const
 {
-	return StackedItem.value().GetMaxStackSize() >= (Quantity + Amount);
+	assert(Amount >= 0);
+
+	return StackedItem.has_value() && StackedItem->GetMaxStackSize() >= (Quantity + Amount);
 }
 
 int ItemStack::Add(int Amount)
 {
+	assert(Amount >= 0);
+
+	if (!StackedItem.has_value())
+	{
+		return Amount;
+	}
+
 	Quantity += Amount;
 
-	if (Quantity > StackedItem.value().GetMaxStackSize())
+	if (Quantity > StackedItem->GetMaxStackSize())
 	{
-		int Leftover = Quantity - StackedItem.value().GetMaxStackSize();
-		Quantity -= Leftover;
-		return Leftover;
+		int SpaceLeft = StackedItem->GetMaxStackSize() - Quantity;
+		int Added = std::min(Amount, SpaceLeft);
+		Quantity += Added;
+		return Amount - Added;
 	}
 	else
 	{
@@ -39,38 +42,35 @@ int ItemStack::Add(int Amount)
 
 int ItemStack::Add(int Amount, const Item& NewItem)
 {
-	if (IsEmpty())
-	{
-		StackedItem = NewItem;
-		Quantity = 0;
-		return Add(Amount);
-	}
-	else
+	assert(Amount >= 0);
+
+	if (!IsEmpty())
 	{
 		return Amount;
 	}
+
+	StackedItem = NewItem;
+	Quantity = 0;
+	return Add(Amount);
 }
 
 int ItemStack::Remove(int Amount)
 {
-	Quantity -= Amount;
+	assert(Amount >= 0);
 
-	if (Quantity < 0)
+	int Removed = std::min(Amount, Quantity);
+	Quantity -= Removed;
+
+	if (Quantity == 0)
 	{
-		int Leftover = -Quantity;
-		Quantity = 0;
 		StackedItem.reset();
-		return Leftover;
 	}
-	else
-	{
-		return 0;
-	}
+	return Amount - Removed;
 }
 
 bool ItemStack::IsFull() const
 {
-	return Quantity == StackedItem.value().GetMaxStackSize();
+	return StackedItem.has_value() && Quantity == StackedItem->GetMaxStackSize();
 }
 
 bool ItemStack::IsEmpty() const

@@ -33,5 +33,5 @@ private:
 
     std::optional<Item> StackedItem;
 
-    int Quantity;
+    int Quantity = 0;
 };
