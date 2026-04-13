@@ -35,7 +35,7 @@ public:
 
     inline std::optional<EquipmentSlot> GetEquipSlot() const { return EquipSlot; }
 
-    bool operator==(const Item& Other);
+    bool operator==(const Item& Other) const;
 
 private:
 

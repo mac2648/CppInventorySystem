@@ -11,7 +11,7 @@ Item::Item(std::string InName, ItemType InType, int InMaxStackSize, std::optiona
 	}
 }
 
-bool Item::operator==(const Item& Other)
+bool Item::operator==(const Item& Other) const
 {
-	return Name == Other.Name && Type == Other.Type && MaxStackSize == Other.MaxStackSize && EquipSlot == Other.EquipSlot;
+	return Name == Other.Name && Type == Other.Type && MaxStackSize == Other.MaxStackSize;
 }

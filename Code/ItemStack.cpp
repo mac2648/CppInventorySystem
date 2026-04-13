@@ -1,6 +1,5 @@
 #include "ItemStack.h"
 
-#include <iostream>
 #include <algorithm>
 #include <cassert>
 
@@ -25,19 +24,11 @@ int ItemStack::Add(int Amount)
 		return Amount;
 	}
 
-	Quantity += Amount;
+	int SpaceLeft = StackedItem->GetMaxStackSize() - Quantity;
+	int Added = std::min(Amount, SpaceLeft);
+	Quantity += Added;
 
-	if (Quantity > StackedItem->GetMaxStackSize())
-	{
-		int SpaceLeft = StackedItem->GetMaxStackSize() - Quantity;
-		int Added = std::min(Amount, SpaceLeft);
-		Quantity += Added;
-		return Amount - Added;
-	}
-	else
-	{
-		return 0;
-	}
+	return Amount - Added;
 }
 
 int ItemStack::Add(int Amount, const Item& NewItem)
@@ -75,6 +66,6 @@ bool ItemStack::IsFull() const
 
 bool ItemStack::IsEmpty() const
 {
-	//in case Quantity is not 0 but item is NoItem the stack is still considered empty
+	//in case Quantity is not 0 but item has no value the stack is still be considered empty
 	return Quantity == 0 || !StackedItem.has_value();
 }
