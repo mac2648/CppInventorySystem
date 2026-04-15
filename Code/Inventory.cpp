@@ -3,23 +3,24 @@
 #include <cassert>
 #include <iostream>
 
-Inventory::Inventory(short Capacity)
+Inventory::Inventory(size_t InCapacity)
 {
-	Slots.resize(Capacity);
+	assert(InCapacity > 0);
+	Slots.resize(InCapacity);
 }
 
 int Inventory::AddItem(const Item& ItemToAdd, int Quantity)
 {
 	assert(Quantity >= 0);
 
-	int Leftover = AddToExistingStacks(ItemToAdd, Quantity);
+	int RemainingAmount = AddToExistingStacks(ItemToAdd, Quantity);
 
-	if (Leftover > 0)
+	if (RemainingAmount > 0)
 	{
-		Leftover = AddToEmptySlots(ItemToAdd, Leftover);
+		RemainingAmount = AddToEmptySlots(ItemToAdd, RemainingAmount);
 	}
 
-	return Leftover;
+	return RemainingAmount;
 }
 
 int Inventory::RemoveItem(const Item& ItemToRemove, int Quantity)
@@ -29,15 +30,23 @@ int Inventory::RemoveItem(const Item& ItemToRemove, int Quantity)
 	int RemainingAmount = Quantity;
 	for (std::optional<ItemStack>& Slot : Slots)
 	{
-		if (Slot.has_value() && Slot->GetItem() == ItemToRemove)
+		if (!Slot.has_value())
 		{
-			RemainingAmount = Slot->Remove(RemainingAmount);
-
-			if (RemainingAmount == 0)
-			{
-				break;
-			}
+			continue;
 		}
+
+		if (!(Slot->GetItem() == ItemToRemove))
+		{
+			continue;
+		}
+
+		RemainingAmount = Slot->Remove(RemainingAmount);
+
+		if (RemainingAmount == 0)
+		{
+			break;
+		}
+		
 	}
 
 	return RemainingAmount;

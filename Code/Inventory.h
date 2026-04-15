@@ -6,7 +6,7 @@
 class Inventory
 {
 public:
-    Inventory(short InCapacity);
+    Inventory(size_t InCapacity);
 
     int AddItem(const Item& ItemToAdd, int Quantity);
 
