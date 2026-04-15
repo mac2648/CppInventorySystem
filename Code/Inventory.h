@@ -10,11 +10,19 @@ public:
 
     int AddItem(const Item& ItemToAdd, int Quantity);
 
+    int AddStack(const ItemStack& StackToAdd);
+
     int RemoveItem(const Item& ItemToRemove, int Quantity);
 
     void PrintInventory() const;
 
-    inline int GetCapacity() const { return Slots.size(); }
+    inline size_t GetCapacity() const { return Slots.size(); }
+
+    //finds and removes the Item from the inventory. returns the removed Item. Will retrive the first item match
+    std::optional<ItemStack> RetriveItem(const Item& Item);
+    std::optional<ItemStack> RetriveItem(std::string ItemName);
+    std::optional<ItemStack> RetriveItem(int ItemIndex);
+
 
 private:
 

@@ -21,7 +21,7 @@ public:
 
     //if fail returns the Itemstack given as input.
     //if success returns the itenm that was equiped at that slot
-    std::optional<ItemStack> Equip(ItemStack& Stack);
+    std::optional<ItemStack> Equip(const ItemStack& Stack);
 
     std::optional<ItemStack> Unequip(EquipmentSlot Slot);
 

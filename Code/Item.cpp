@@ -13,5 +13,20 @@ Item::Item(std::string InName, ItemType InType, int InMaxStackSize, std::optiona
 
 bool Item::operator==(const Item& Other) const
 {
-	return Name == Other.Name && Type == Other.Type && MaxStackSize == Other.MaxStackSize;
+	return Name == Other.Name;
+}
+
+
+//----------------------------------- Enum related functions -------------------------------------------
+EquipmentSlot operator++(EquipmentSlot& Slot, int)
+{
+	EquipmentSlot OldValue = Slot;
+	Slot = static_cast<EquipmentSlot>(static_cast<uint8_t>(Slot) + 1);
+	return OldValue;
+}
+
+EquipmentSlot& operator++(EquipmentSlot& Slot)
+{
+	Slot = static_cast<EquipmentSlot>(static_cast<uint8_t>(Slot) + 1);
+	return Slot;
 }

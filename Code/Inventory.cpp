@@ -23,6 +23,11 @@ int Inventory::AddItem(const Item& ItemToAdd, int Quantity)
 	return RemainingAmount;
 }
 
+int Inventory::AddStack(const ItemStack& StackToAdd)
+{
+	return AddItem(StackToAdd.GetItem(), StackToAdd.GetQuantity());
+}
+
 int Inventory::RemoveItem(const Item& ItemToRemove, int Quantity)
 {
 	assert(Quantity >= 0);
@@ -42,6 +47,11 @@ int Inventory::RemoveItem(const Item& ItemToRemove, int Quantity)
 
 		RemainingAmount = Slot->Remove(RemainingAmount);
 
+		if (Slot->GetQuantity() <= 0)
+		{
+			Slot.reset();
+		}
+
 		if (RemainingAmount == 0)
 		{
 			break;
@@ -54,6 +64,7 @@ int Inventory::RemoveItem(const Item& ItemToRemove, int Quantity)
 
 void Inventory::PrintInventory() const
 {
+	std::cout << "Inventory\n";
 	for (const std::optional<ItemStack>& Slot : Slots)
 	{
 		if (Slot.has_value() && !Slot->IsEmpty())
@@ -104,4 +115,39 @@ int Inventory::AddToEmptySlots(const Item& ItemToAdd, int Quantity)
 	}
 
 	return RemainingAmount;
+}
+
+std::optional<ItemStack> Inventory::RetriveItem(const Item& Item)
+{
+	return RetriveItem(Item.GetName());
+}
+
+std::optional<ItemStack> Inventory::RetriveItem(std::string ItemName)
+{
+	for (std::optional<ItemStack>& Slot : Slots)
+	{
+		if (!Slot.has_value())
+		{
+			continue;
+		}
+
+		if (Slot->GetItem().GetName() == ItemName)
+		{
+			ItemStack RemovedStack = Slot.value();
+			Slot.reset();
+			return RemovedStack;
+		}
+	}
+
+	return std::nullopt;
+}
+
+std::optional<ItemStack> Inventory::RetriveItem(int ItemIndex)
+{
+	if (ItemIndex >= Slots.size() || ItemIndex < 0)
+	{
+		return std::nullopt;
+	}
+
+	return Slots[ItemIndex];
 }

@@ -1,6 +1,8 @@
 #include "Equipment.h"
 
-std::optional<ItemStack> Equipment::Equip(ItemStack& Stack)
+#include <iostream>
+
+std::optional<ItemStack> Equipment::Equip(const ItemStack& Stack)
 {
 	if (Stack.GetItem() == Item::NoItem)
 	{
@@ -51,5 +53,14 @@ const ItemStack* Equipment::GetEquippedItem(EquipmentSlot Slot) const
 
 void Equipment::PrintEquipment() const
 {
+	std::cout << "Equipment\n";
+	for (EquipmentSlot Slot = EquipmentSlot::Head; Slot <= EquipmentSlot::Shield; Slot++)
+	{
+		if (!Equipped.contains(Slot))
+		{
+			continue;
+		}
 
+		std::cout << ToString(Slot) << ": " << Equipped.at(Slot).GetItem().GetName() << std::endl;
+	}
 }

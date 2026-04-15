@@ -17,7 +17,26 @@ enum class EquipmentSlot : uint8_t
     Legs,
     Weapon,
     Shield
+
+
 };
+
+EquipmentSlot operator++(EquipmentSlot& Slot, int);
+EquipmentSlot& operator++(EquipmentSlot& Slot);
+
+constexpr const char* ToString(EquipmentSlot Slot)
+{
+    switch (Slot)
+    {
+    case EquipmentSlot::Head:   return "Head";
+    case EquipmentSlot::Chest:  return "Chest";
+    case EquipmentSlot::Legs:   return "Legs";
+    case EquipmentSlot::Weapon: return "Weapon";
+    case EquipmentSlot::Shield: return "Shield";
+    }
+
+    return "Unknown";
+}
 
 class Item
 {
@@ -57,4 +76,5 @@ public:
 static Item HealthPotion("Health Potion", ItemType::Consumable, 20, std::nullopt);
 static Item ManaPotion("Mana Potion", ItemType::Consumable, 20, std::nullopt);
 static Item IronSword("Iron Sword", ItemType::Equipment, 1, EquipmentSlot::Weapon);
+static Item BronzeSword("Bronze Sword", ItemType::Equipment, 1, EquipmentSlot::Weapon);
 static Item IronHelmet("Iron Helmet", ItemType::Equipment, 1, EquipmentSlot::Head);
