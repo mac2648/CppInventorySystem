@@ -6,6 +6,7 @@ class ItemStack
 {
 public:
 
+    ItemStack() { StackedItem = Item::NoItem; Quantity = 1; }
     ItemStack(const Item& InItem, int InQuantity);
 
     inline const Item& GetItem() const { return StackedItem.has_value() ? StackedItem.value() : Item::NoItem; }
